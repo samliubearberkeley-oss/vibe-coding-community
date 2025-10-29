@@ -188,30 +188,99 @@ export default function Auth() {
   }
 
   return (
-    <div style={{ border: '1px solid #000', padding: '30px', background: '#fff' }}>
-      <div style={{ fontSize: '15px', fontWeight: 'normal', marginBottom: '20px', textAlign: 'center', textTransform: 'lowercase' }}>
-        join vibe coding community share your ideas
+    <div style={{ 
+      border: '2px solid #000', 
+      padding: '40px 30px', 
+      background: '#fff',
+      maxWidth: '420px',
+      width: '100%',
+      boxShadow: '4px 4px 0 0 #000'
+    }}>
+      <div style={{ 
+        fontSize: '16px', 
+        fontWeight: 'normal', 
+        marginBottom: '30px', 
+        textAlign: 'center', 
+        textTransform: 'lowercase',
+        lineHeight: '1.6',
+        letterSpacing: '0.5px'
+      }}>
+        join vibe coding community<br />
+        <span style={{ fontSize: '14px', opacity: 0.8 }}>share your ideas</span>
       </div>
       
       {!showEmailForm ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <button
+            onClick={() => setShowEmailForm(true)}
+            style={{
+              background: '#fff',
+              color: '#000',
+              padding: '14px 24px',
+              fontSize: '15px',
+              fontWeight: 'normal',
+              border: '2px solid #000',
+              cursor: 'pointer',
+              textTransform: 'lowercase',
+              width: '100%',
+              transition: 'all 0.1s ease',
+              boxShadow: '3px 3px 0 0 #000'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translate(-1px, -1px)';
+              e.currentTarget.style.boxShadow = '4px 4px 0 0 #000';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translate(0, 0)';
+              e.currentTarget.style.boxShadow = '3px 3px 0 0 #000';
+            }}
+          >
+            [ email / password ]
+          </button>
+          <div style={{ 
+            marginTop: '8px',
+            paddingTop: '20px',
+            borderTop: '1px solid #000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px'
+          }}>
+            <div style={{ flex: 1, height: '1px', background: '#000' }}></div>
+            <span style={{ fontSize: '12px', textTransform: 'lowercase', opacity: 0.7 }}>or</span>
+            <div style={{ flex: 1, height: '1px', background: '#000' }}></div>
+          </div>
           <button
             onClick={() => handleOAuth('google')}
             disabled={oauthLoading === 'google'}
             style={{
               background: oauthLoading === 'google' ? '#000' : '#fff',
               color: oauthLoading === 'google' ? '#fff' : '#000',
-              padding: '12px 24px',
-              fontSize: '14px',
+              padding: '14px 24px',
+              fontSize: '15px',
               fontWeight: 'normal',
-              border: '1px solid #000',
+              border: '2px solid #000',
               cursor: oauthLoading === 'google' ? 'wait' : 'pointer',
               textTransform: 'lowercase',
               width: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px'
+              gap: '10px',
+              transition: 'all 0.1s ease',
+              boxShadow: '3px 3px 0 0 #000'
+            }}
+            onMouseEnter={(e) => {
+              if (oauthLoading !== 'google') {
+                e.currentTarget.style.transform = 'translate(-1px, -1px)';
+                e.currentTarget.style.boxShadow = '4px 4px 0 0 #000';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (oauthLoading !== 'google') {
+                e.currentTarget.style.transform = 'translate(0, 0)';
+                e.currentTarget.style.boxShadow = '3px 3px 0 0 #000';
+              }
             }}
           >
             <GoogleIcon />
@@ -223,43 +292,40 @@ export default function Auth() {
             style={{
               background: oauthLoading === 'github' ? '#000' : '#fff',
               color: oauthLoading === 'github' ? '#fff' : '#000',
-              padding: '12px 24px',
-              fontSize: '14px',
+              padding: '14px 24px',
+              fontSize: '15px',
               fontWeight: 'normal',
-              border: '1px solid #000',
+              border: '2px solid #000',
               cursor: oauthLoading === 'github' ? 'wait' : 'pointer',
               textTransform: 'lowercase',
               width: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px'
+              gap: '10px',
+              transition: 'all 0.1s ease',
+              boxShadow: '3px 3px 0 0 #000'
+            }}
+            onMouseEnter={(e) => {
+              if (oauthLoading !== 'github') {
+                e.currentTarget.style.transform = 'translate(-1px, -1px)';
+                e.currentTarget.style.boxShadow = '4px 4px 0 0 #000';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (oauthLoading !== 'github') {
+                e.currentTarget.style.transform = 'translate(0, 0)';
+                e.currentTarget.style.boxShadow = '3px 3px 0 0 #000';
+              }
             }}
           >
             <GitHubIcon />
             <span>{oauthLoading === 'github' ? 'loading...' : '[ sign in with github ]'}</span>
           </button>
-          <button
-            onClick={() => setShowEmailForm(true)}
-            style={{
-              background: '#fff',
-              color: '#000',
-              padding: '12px 24px',
-              fontSize: '14px',
-              fontWeight: 'normal',
-              border: '1px solid #000',
-              cursor: 'pointer',
-              textTransform: 'lowercase',
-              width: '100%',
-              marginTop: '8px'
-            }}
-          >
-            [ email / password ]
-          </button>
         </div>
       ) : (
         <form onSubmit={handleEmailAuth}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <input
                 type="email"
@@ -269,12 +335,13 @@ export default function Auth() {
                 required
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
+                  padding: '14px 16px',
                   background: '#fff',
                   color: '#000',
-                  border: '1px solid #000',
+                  border: '2px solid #000',
                   fontSize: '15px',
-                  fontFamily: 'inherit'
+                  fontFamily: 'inherit',
+                  boxShadow: '2px 2px 0 0 #000'
                 }}
               />
             </div>
@@ -287,21 +354,30 @@ export default function Auth() {
                 required
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
+                  padding: '14px 16px',
                   background: '#fff',
                   color: '#000',
-                  border: '1px solid #000',
+                  border: '2px solid #000',
                   fontSize: '15px',
-                  fontFamily: 'inherit'
+                  fontFamily: 'inherit',
+                  boxShadow: '2px 2px 0 0 #000'
                 }}
               />
             </div>
             {error && (
-              <div style={{ fontSize: '13px', color: '#000', padding: '8px', border: '1px solid #000', background: '#fff', textTransform: 'lowercase' }}>
+              <div style={{ 
+                fontSize: '13px', 
+                color: '#000', 
+                padding: '12px', 
+                border: '2px solid #000', 
+                background: '#fff', 
+                textTransform: 'lowercase',
+                boxShadow: '2px 2px 0 0 #000'
+              }}>
                 {error}
               </div>
             )}
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
               <button
                 type="submit"
                 disabled={emailLoading}
@@ -309,12 +385,26 @@ export default function Auth() {
                   flex: 1,
                   background: emailLoading ? '#000' : '#fff',
                   color: emailLoading ? '#fff' : '#000',
-                  padding: '12px 24px',
-                  fontSize: '14px',
+                  padding: '14px 24px',
+                  fontSize: '15px',
                   fontWeight: 'normal',
-                  border: '1px solid #000',
+                  border: '2px solid #000',
                   cursor: emailLoading ? 'wait' : 'pointer',
-                  textTransform: 'lowercase'
+                  textTransform: 'lowercase',
+                  boxShadow: '3px 3px 0 0 #000',
+                  transition: 'all 0.1s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!emailLoading) {
+                    e.currentTarget.style.transform = 'translate(-1px, -1px)';
+                    e.currentTarget.style.boxShadow = '4px 4px 0 0 #000';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!emailLoading) {
+                    e.currentTarget.style.transform = 'translate(0, 0)';
+                    e.currentTarget.style.boxShadow = '3px 3px 0 0 #000';
+                  }
                 }}
               >
                 {emailLoading ? 'loading...' : isSignUp ? '[ sign up ]' : '[ sign in ]'}
@@ -329,12 +419,22 @@ export default function Auth() {
                   flex: 1,
                   background: '#fff',
                   color: '#000',
-                  padding: '12px 24px',
-                  fontSize: '14px',
+                  padding: '14px 24px',
+                  fontSize: '15px',
                   fontWeight: 'normal',
-                  border: '1px solid #000',
+                  border: '2px solid #000',
                   cursor: 'pointer',
-                  textTransform: 'lowercase'
+                  textTransform: 'lowercase',
+                  boxShadow: '3px 3px 0 0 #000',
+                  transition: 'all 0.1s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translate(-1px, -1px)';
+                  e.currentTarget.style.boxShadow = '4px 4px 0 0 #000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translate(0, 0)';
+                  e.currentTarget.style.boxShadow = '3px 3px 0 0 #000';
                 }}
               >
                 {isSignUp ? '[ sign in ]' : '[ sign up ]'}
@@ -351,13 +451,14 @@ export default function Auth() {
               style={{
                 background: '#fff',
                 color: '#000',
-                padding: '8px 16px',
+                padding: '10px 16px',
                 fontSize: '13px',
                 fontWeight: 'normal',
                 border: '1px solid #000',
                 cursor: 'pointer',
                 textTransform: 'lowercase',
-                width: '100%'
+                width: '100%',
+                marginTop: '4px'
               }}
             >
               [ back ]

@@ -64,45 +64,72 @@ export default function CommentSection({ postId, onCommentUpdate }: CommentSecti
 
     setSubmitting(true);
     try {
-      const { error } = await client.database
+      const { data, error } = await client.database
         .from('comments')
         .insert([{
           post_id: postId,
           user_id: currentUserId,
           content: newComment.trim()
-        }]);
+        }])
+        .select()
+        .single();
 
-      if (!error) {
+      if (!error && data) {
         setNewComment('');
         loadComments();
         onCommentUpdate?.();
-      } else {
+      } else if (error) {
         console.error('Error creating comment:', error);
+        alert('Failed to create comment: ' + error.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating comment:', error);
+      alert('Failed to create comment');
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (commentId: string) => {
+    if (!currentUserId) {
+      alert('Please sign in to delete comments');
+      return;
+    }
+
+    // Find the comment to verify ownership
+    const comment = comments.find(c => c.id === commentId);
+    if (!comment) {
+      alert('Comment not found');
+      return;
+    }
+
+    if (comment.user_id !== currentUserId) {
+      alert('You can only delete your own comments');
+      return;
+    }
+
     if (!confirm('delete this comment?')) {
       return;
     }
 
     try {
+      // Verify ownership before deletion - add user_id filter for extra security
       const { error } = await client.database
         .from('comments')
         .delete()
-        .eq('id', commentId);
+        .eq('id', commentId)
+        .eq('user_id', currentUserId);
 
-      if (!error) {
+      if (error) {
+        console.error('Error deleting comment:', error);
+        alert('Failed to delete comment: ' + error.message);
+      } else {
         loadComments();
         onCommentUpdate?.();
       }
     } catch (error) {
       console.error('Error deleting comment:', error);
+      alert('Failed to delete comment');
     }
   };
 
@@ -181,7 +208,7 @@ export default function CommentSection({ postId, onCommentUpdate }: CommentSecti
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                {comment.users.avatar_url && (
+                {currentUserId && comment.users.avatar_url && (
                   <img
                     src={comment.users.avatar_url}
                     alt={comment.users.nickname || 'User'}
@@ -194,12 +221,16 @@ export default function CommentSection({ postId, onCommentUpdate }: CommentSecti
                   />
                 )}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '14px', fontWeight: 'normal', textTransform: 'lowercase' }}>
-                    {comment.users.nickname || 'anonymous'}
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#000', marginTop: '4px' }}>
-                    {formatDate(comment.created_at)}
-                  </div>
+                  {currentUserId && (
+                    <>
+                      <div style={{ fontSize: '14px', fontWeight: 'normal', textTransform: 'lowercase' }}>
+                        {comment.users.nickname || 'anonymous'}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#000', marginTop: '4px' }}>
+                        {formatDate(comment.created_at)}
+                      </div>
+                    </>
+                  )}
                 </div>
                 {currentUserId === comment.user_id && (
                   <button

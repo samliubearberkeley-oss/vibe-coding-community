@@ -67,7 +67,13 @@ export default function CreatePost({ onPostCreated, post, onCancel }: CreatePost
         .filter(tag => tag.length > 0);
 
       if (post) {
-        // Update existing post
+        // Update existing post - verify ownership first
+        if (post.user_id !== userData.user.id) {
+          alert('You can only edit your own posts');
+          setSubmitting(false);
+          return;
+        }
+
         const { error } = await client.database
           .from('posts')
           .update({
@@ -76,6 +82,7 @@ export default function CreatePost({ onPostCreated, post, onCancel }: CreatePost
             tags: tagsArray.length > 0 ? tagsArray : null
           })
           .eq('id', post.id)
+          .eq('user_id', userData.user.id) // Add user_id filter for extra security
           .select()
           .single();
 

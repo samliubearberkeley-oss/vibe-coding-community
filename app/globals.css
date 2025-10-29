@@ -40,6 +40,11 @@ button:hover:not(:disabled) {
   color: #fff;
 }
 
+button:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 #000 !important;
+}
+
 button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
@@ -75,6 +80,20 @@ img {
 
   header {
     padding: 20px !important;
+  }
+
+  header > div:first-child {
+    padding: 10px 16px !important;
+  }
+
+  header > div:first-child > div:first-child {
+    font-size: 20px !important;
+    letter-spacing: 2px !important;
+  }
+
+  header > div:first-child > div:last-child {
+    font-size: 15px !important;
+    letter-spacing: 1px !important;
   }
 
   main {

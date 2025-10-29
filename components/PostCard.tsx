@@ -112,13 +112,17 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
           setLikes(likes - 1);
         }
       } else {
-        const { error } = await client.database
+        const { data, error } = await client.database
           .from('likes')
-          .insert([{ post_id: post.id, user_id: currentUserId }]);
+          .insert([{ post_id: post.id, user_id: currentUserId }])
+          .select()
+          .single();
 
-        if (!error) {
+        if (!error && data) {
           setLiked(true);
           setLikes(likes + 1);
+        } else if (error) {
+          console.error('Error creating like:', error);
         }
       }
     } catch (error) {
@@ -128,6 +132,7 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
 
   const handleDelete = async () => {
     if (!currentUserId || currentUserId !== post.user_id) {
+      alert('You can only delete your own posts');
       return;
     }
 
@@ -136,16 +141,22 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
     }
 
     try {
+      // Verify ownership before deletion - add user_id filter for extra security
       const { error } = await client.database
         .from('posts')
         .delete()
-        .eq('id', post.id);
+        .eq('id', post.id)
+        .eq('user_id', currentUserId);
 
-      if (!error) {
+      if (error) {
+        console.error('Error deleting post:', error);
+        alert('Failed to delete post: ' + error.message);
+      } else {
         onUpdate();
       }
     } catch (error) {
       console.error('Error deleting post:', error);
+      alert('Failed to delete post');
     }
   };
 
@@ -174,7 +185,7 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
         paddingBottom: '20px',
         borderBottom: '1px solid #000'
       }}>
-        {post.users.avatar_url && (
+        {currentUserId && post.users.avatar_url && (
           <img 
             src={post.users.avatar_url} 
             alt={post.users.nickname || 'User'} 
@@ -187,12 +198,16 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
           />
         )}
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: '15px', fontWeight: 'normal', textTransform: 'lowercase' }}>
-            {post.users.nickname || 'anonymous'}
-          </div>
-          <div style={{ fontSize: '12px', color: '#000', marginTop: '4px' }}>
-            {formatDate(post.created_at)}
-          </div>
+          {currentUserId && (
+            <>
+              <div style={{ fontSize: '15px', fontWeight: 'normal', textTransform: 'lowercase' }}>
+                {post.users.nickname || 'anonymous'}
+              </div>
+              <div style={{ fontSize: '12px', color: '#000', marginTop: '4px' }}>
+                {formatDate(post.created_at)}
+              </div>
+            </>
+          )}
         </div>
         {currentUserId === post.user_id && (
           <div style={{ display: 'flex', gap: '8px' }}>
